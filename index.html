@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The TIF Sales Playbook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .view {
+            display: none;
+        }
+        .view.active {
+            display: block;
+        }
+        /* Simple animation for view transitions */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div id="app" class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">The TIF Sales Playbook</h1>
+            <div id="nav-buttons">
+                 <button id="dashboard-btn" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">Dashboard</button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main>
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="view active fade-in">
+                <div class="mb-8">
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="search-bar" placeholder="Client says 'price is too high'..." class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow">
+                    </div>
+                    <div id="search-results" class="mt-2 bg-white border border-gray-200 rounded-lg shadow-sm"></div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="w-full bg-white p-4 rounded-lg border border-gray-200 shadow-sm text-left hover:bg-gray-50 hover:border-blue-400 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500" data-key="busy">
+                            <h3 class="font-semibold text-gray-900">"I'm too busy / No time right now."</h3>
+                        </button>
+                        <button class="w-full bg-white p-4 rounded-lg border border-gray-200 shadow-sm text-left hover:bg-gray-50 hover:border-blue-400 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500" data-key="price">
+                            <h3 class="font-semibold text-gray-900">"The price is too high / Not in budget."</h3>
+                        </button>
+                    </div>
+                     <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="w-full bg-white p-4 rounded-lg border border-gray-200 shadow-sm text-left hover:bg-gray-50 hover:border-blue-400 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500" data-key="competitor">
+                            <h3 class="font-semibold text-gray-900">"We already attended another fair."</h3>
+                        </button>
+                         <button class="w-full bg-white p-4 rounded-lg border border-gray-200 shadow-sm text-left hover:bg-gray-50 hover:border-blue-400 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500" data-key="manager">
+                            <h3 class="font-semibold text-gray-900">"I need to talk to my manager/team."</h3>
+                        </button>
+                    </div>
+                    <button class="w-full bg-white p-4 rounded-lg border border-gray-200 shadow-sm text-left hover:bg-gray-50 hover:border-blue-400 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500" data-key="email">
+                        <h3 class="font-semibold text-gray-900">"Send me an email."</h3>
+                    </button>
+                </div>
+                
+                <div class="mt-12 text-center">
+                     <button id="show-call-log-form-btn" class="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Log a Call / Journal Entry
+                    </button>
+                </div>
+            </div>
+
+            <!-- Objection Library View -->
+            <div id="objection-view" class="view fade-in">
+                <!-- Content will be injected by JS -->
+            </div>
+
+            <!-- Call Log Form View -->
+            <div id="call-log-form-view" class="view fade-in">
+                <h2 class="text-2xl font-bold mb-4">Post-Call Analysis</h2>
+                <form id="call-log-form" class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-4">
+                    <div>
+                        <label for="company-name" class="block text-sm font-medium text-gray-700">Company Name</label>
+                        <input type="text" id="company-name" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="objections-heard" class="block text-sm font-medium text-gray-700">Objection(s) Heard</label>
+                        <input type="text" id="objections-heard" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="my-response" class="block text-sm font-medium text-gray-700">My Response</label>
+                        <textarea id="my-response" rows="3" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    <div>
+                        <label for="their-reaction" class="block text-sm font-medium text-gray-700">Their Reaction / The Outcome</label>
+                        <textarea id="their-reaction" rows="3" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    <div>
+                        <label for="notes" class="block text-sm font-medium text-gray-700">Notes & Reflections for Next Time</label>
+                        <textarea id="notes" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    <div class="flex items-center justify-between pt-2">
+                        <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Save Journal Entry</button>
+                        <button type="button" id="view-logs-btn" class="text-sm font-medium text-blue-600 hover:underline">View All Logs</button>
+                    </div>
+                </form>
+                <div id="success-message" class="hidden mt-4 p-3 bg-green-100 text-green-800 border border-green-200 rounded-lg">
+                    Log saved successfully!
+                </div>
+            </div>
+            
+            <!-- View Logs View -->
+            <div id="view-logs-view" class="view fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Call Log Journal</h2>
+                    <button id="back-to-form-btn" class="text-sm font-medium text-blue-600 hover:underline">Back to Form</button>
+                </div>
+                <div id="logs-container" class="space-y-4">
+                    <!-- Logs will be injected here -->
+                    <p class="text-gray-500">No logs found. Start by adding one!</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // These global variables are provided by the environment.
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "test", authDomain: "test.firebaseapp.com", projectId: "test" };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'tif-sales-playbook';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, setLogLevel, collection, addDoc, onSnapshot, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        setLogLevel('debug');
+
+        let userId = null;
+
+        // --- OBJECTION LIBRARY DATA ---
+        const objectionLibrary = {
+            busy: {
+                title: "I'm too busy / No time right now.",
+                meaning: [
+                    "You haven't convinced me this is worth my time.",
+                    "I'm genuinely in the middle of a task and can't focus.",
+                    "This is just a polite way to say no."
+                ],
+                goal: "Acknowledge their time, prove value quickly, and secure a specific time to talk later.",
+                responses: [
+                    {
+                        name: 'The "Empathy + Pique Interest" Response',
+                        script: "I completely understand, and I know you're busy. The reason I'm calling specifically today is that we just confirmed [Mention a major company/competitor] will be exhibiting near the spot I have in mind for you. I can explain in just 30 seconds how this could benefit you, or we can schedule a 5-minute call for later. Which works better?"
+                    },
+                    {
+                        name: 'The "Direct & Respectful" Response',
+                        script: "I respect that. Is there a better time to call for a brief 5-minute chat? Perhaps this afternoon at 3:00 PM or tomorrow morning at 10:00 AM?"
+                    },
+                    {
+                        name: 'The "Lowering the Stakes" Response',
+                        script: "No problem at all. Would it be okay if I sent you a single email with a short video showing the new pavilion layout? It'll take you less than a minute to see the value. What's the best email for you?"
+                    }
+                ]
+            },
+            price: {
+                title: "The price is too high / It's not in the budget.",
+                meaning: [
+                    "I don't see enough value to justify the cost.",
+                    "We genuinely have a budget constraint.",
+                    "I'm negotiating. I want to see if I can get a discount."
+                ],
+                goal: "Reframe the conversation from cost to value and ROI. Uncover the real budget situation.",
+                responses: [
+                    {
+                        name: 'The "Value Pivot" Response',
+                        script: "I hear you. Often, when I talk to businesses like yours, 'price' is really a conversation about ROI. Could we take a moment to discuss the kind of footfall we saw last year and how that could translate into new leads for you? For many of our exhibitors, one or two new clients from the fair covers the cost entirely."
+                    },
+                    {
+                        name: 'The "Isolate the Objection" Response',
+                        script: "That's fair. Putting the price aside for just a moment, does the booth location and the expected audience seem like a good fit for your goals?"
+                    },
+                    {
+                        name: 'The "Flexible Options" Response',
+                        script: "I understand that the upfront cost can be a consideration. We do have some smaller booth options and flexible payment plans available. Would it be helpful to explore one of those to see if we can make it work within your budget?"
+                    }
+                ]
+            },
+            competitor: {
+                title: "We already attended another fair.",
+                meaning: [
+                    "Our marketing budget for events is already spent.",
+                    "We had a bad experience at the last fair and are hesitant.",
+                    "We think all fairs are the same."
+                ],
+                goal: "Differentiate your fair and highlight its unique value proposition that the other fair didn't offer.",
+                responses: [
+                    {
+                        name: 'The "Differentiator" Response',
+                        script: "That's great, I hope it went well for you! We actually find many companies attend both. The reason is that our fair specifically attracts a strong audience of [mention specific industry/demographic], which is a unique opportunity. Did the other fair provide that specific focus?"
+                    },
+                    {
+                        name: 'The "Complement, Don\'t Compete" Response',
+                        script: "I'm glad to hear you're active on the event circuit. Many of our most successful exhibitors use our fair to complement their other marketing efforts. We're known for [Your Unique Selling Proposition, e.g., 'high-quality international buyers']. How do you currently reach that segment?"
+                    }
+                ]
+            },
+            manager: {
+                title: "I need to talk to my manager/team.",
+                meaning: [
+                    "I'm not the real decision-maker.",
+                    "I'm not convinced and need an easy way to end the call.",
+                    "I'm genuinely interested but need to follow internal protocol."
+                ],
+                goal: "Empower your contact to be a champion for your product and get a commitment for a next step.",
+                responses: [
+                    {
+                        name: 'The "Empower the Champion" Response',
+                        script: "That makes perfect sense. To make that conversation as productive as possible for you, what's the one piece of information—whether it's ROI data or a list of our key attendees—that would be most helpful for your manager to see? I can send over a one-page summary for you to share."
+                    },
+                    {
+                        name: 'The "Secure the Next Step" Response',
+                        script: "Of course. Would it be helpful to schedule a brief 10-minute joint call with you and your manager? That way I can answer any questions they have directly. How does their calendar look for Thursday afternoon?"
+                    }
+                ]
+            },
+            email: {
+                title: "Just send me an email.",
+                meaning: [
+                    "This isn't a priority and I want to get you off the phone.",
+                    "I want to review this on my own time.",
+                    "I'm screening calls and this is my standard response."
+                ],
+                goal: "Get a commitment for a specific next step and make the email relevant and actionable.",
+                responses: [
+                    {
+                        name: 'The "Action-Oriented" Response',
+                        script: "I'd be happy to. So I can make it relevant and not waste your time, what should I focus on in the email? The new pavilion layout, the list of confirmed attendees from your industry, or the early-bird pricing?"
+                    },
+                    {
+                        name: 'The "Confirm a Follow-up" Response',
+                        script: "Absolutely. I'll send that over right now. If you think it looks interesting, would it be okay if I give you a brief follow-up call on Friday morning to answer any questions? What time works best?"
+                    }
+                ]
+            }
+        };
+
+        // --- UI & NAVIGATION LOGIC ---
+        const views = document.querySelectorAll('.view');
+        
+        function switchView(viewId) {
+            views.forEach(view => {
+                if (view.id === viewId) {
+                    view.classList.add('active');
+                } else {
+                    view.classList.remove('active');
+                }
+            });
+            window.scrollTo(0, 0); // Scroll to top on view change
+        }
+
+        function showObjection(key) {
+            const data = objectionLibrary[key];
+            if (!data) return;
+            
+            const container = document.getElementById('objection-view');
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <h2 class="text-3xl font-bold text-gray-900">${data.title}</h2>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">The Real Meaning</h3>
+                        <ul class="list-disc list-inside space-y-1 text-gray-600">
+                            ${data.meaning.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Your Goal</h3>
+                        <p class="text-gray-600">${data.goal}</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Response Variants</h3>
+                        <div class="space-y-4">
+                            ${data.responses.map(res => `
+                                <div class="bg-white p-4 rounded-lg border border-gray-200">
+                                    <h4 class="font-semibold text-blue-700 mb-2">${res.name}</h4>
+                                    <p class="text-gray-600">${res.script}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            switchView('objection-view');
+        }
+
+        // --- Event Listeners ---
+        document.getElementById('dashboard-btn').addEventListener('click', () => switchView('dashboard-view'));
+        
+        document.querySelectorAll('[data-key]').forEach(button => {
+            button.addEventListener('click', () => showObjection(button.dataset.key));
+        });
+        
+        document.getElementById('show-call-log-form-btn').addEventListener('click', () => switchView('call-log-form-view'));
+        document.getElementById('view-logs-btn').addEventListener('click', () => switchView('view-logs-view'));
+        document.getElementById('back-to-form-btn').addEventListener('click', () => switchView('call-log-form-view'));
+        
+        // --- Search Logic ---
+        const searchBar = document.getElementById('search-bar');
+        const searchResults = document.getElementById('search-results');
+        
+        searchBar.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            searchResults.innerHTML = '';
+            if (query.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            const results = Object.entries(objectionLibrary)
+                .filter(([key, value]) => value.title.toLowerCase().includes(query));
+            
+            if (results.length > 0) {
+                searchResults.style.display = 'block';
+                const ul = document.createElement('ul');
+                results.forEach(([key, value]) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<button class="w-full text-left p-3 hover:bg-gray-100">${value.title}</button>`;
+                    li.querySelector('button').addEventListener('click', () => {
+                        showObjection(key);
+                        searchBar.value = '';
+                        searchResults.style.display = 'none';
+                    });
+                    ul.appendChild(li);
+                });
+                searchResults.appendChild(ul);
+            } else {
+                searchResults.style.display = 'none';
+            }
+        });
+        
+        // --- Firestore Logic ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                console.log("User authenticated with UID:", userId);
+                loadLogs();
+            } else if (initialAuthToken) {
+                try {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } catch (error) {
+                    console.error("Error signing in with custom token, trying anonymous", error);
+                    await signInAnonymously(auth);
+                }
+            } else {
+                try {
+                    await signInAnonymously(auth);
+                } catch(error) {
+                    console.error("Error signing in anonymously:", error);
+                }
+            }
+        });
+
+        const callLogForm = document.getElementById('call-log-form');
+        callLogForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!userId) {
+                alert("Authentication not ready. Please wait a moment and try again.");
+                return;
+            }
+
+            const logData = {
+                date: new Date().toISOString(),
+                companyName: callLogForm['company-name'].value,
+                objectionsHeard: callLogForm['objections-heard'].value,
+                myResponse: callLogForm['my-response'].value,
+                theirReaction: callLogForm['their-reaction'].value,
+                notes: callLogForm['notes'].value,
+                createdAt: new Date()
+            };
+
+            try {
+                const collectionPath = `artifacts/${appId}/users/${userId}/callLogs`;
+                await addDoc(collection(db, collectionPath), logData);
+                callLogForm.reset();
+                const successMsg = document.getElementById('success-message');
+                successMsg.classList.remove('hidden');
+                setTimeout(() => successMsg.classList.add('hidden'), 3000);
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Could not save log. See console for details.");
+            }
+        });
+
+        function loadLogs() {
+            if (!userId) return;
+
+            const logsContainer = document.getElementById('logs-container');
+            const collectionPath = `artifacts/${appId}/users/${userId}/callLogs`;
+            const q = query(collection(db, collectionPath));
+            
+            // Note: Firebase may require an index for orderBy. If this errors, remove orderBy.
+            // For now, sorting will happen client-side after fetching.
+            
+            onSnapshot(q, (querySnapshot) => {
+                const logs = [];
+                querySnapshot.forEach((doc) => {
+                    logs.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Sort logs by date descending in JavaScript
+                logs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                if (logs.length === 0) {
+                    logsContainer.innerHTML = `<p class="text-gray-500">No logs found. Start by adding one!</p>`;
+                    return;
+                }
+
+                logsContainer.innerHTML = logs.map(log => `
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-gray-900">${log.companyName}</h3>
+                            <span class="text-xs text-gray-500">${new Date(log.date).toLocaleString()}</span>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <p><strong class="font-medium text-gray-600">Objection(s):</strong> ${log.objectionsHeard}</p>
+                            <p><strong class="font-medium text-gray-600">My Response:</strong> ${log.myResponse}</p>
+                            <p><strong class="font-medium text-gray-600">Outcome:</strong> ${log.theirReaction}</p>
+                            ${log.notes ? `<p class="pt-2 border-t border-gray-100 mt-2"><strong class="font-medium text-gray-600">Reflections:</strong> ${log.notes}</p>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }, (error) => {
+                console.error("Error loading logs:", error);
+                logsContainer.innerHTML = `<p class="text-red-500">Error loading logs. Please check the console.</p>`;
+            });
+        }
+
+    </script>
+</body>
+</html>
